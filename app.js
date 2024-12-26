@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4000;
 app.use(bodyParser.json());
 
 app.use('/auth', addUser);
-app.use('/post', addUser);
+app.use('/post', posts);
 
 app.listen(PORT, () => {
     console.log(`listening on http://localhost:${PORT}`);
