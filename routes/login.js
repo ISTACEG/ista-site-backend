@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 router.post(
   "/userLogin",
@@ -39,9 +40,20 @@ router.post(
           .json({ success: false, message: "Invalid credentials" });
       }
 
+      const payload = {
+        user: {
+          roll: roll,
+          role: user.isAdmin == true ? "admin" : "user",
+        },
+      };
+
+      let token  = jwt.sign(payload, "dev", {
+        expiresIn: "2h",
+      });
+
       return res
         .status(200)
-        .json({ success: true, message: "Login successful" });
+        .json({ success: true, token, message: "Login successful" });
     } catch (error) {
       return res
         .status(500)

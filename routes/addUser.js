@@ -23,7 +23,7 @@ router.post(
       const student_email = `${roll.trim()}@student.annauniv.edu`;
       const user = await User.findOne({ roll });
       const year = parseInt(roll.substring(0, 4)) + 4;
-
+      console.log(roll);
       if (user && user.verified && user.password) {
         const resp = {
           student_email: user.student_mail,
@@ -33,6 +33,7 @@ router.post(
         return res.status(200).json(resp);
       } else {
         if (!user) {
+          console.log(roll, student_email, year)
           const newUser = new User({ roll, student_mail: student_email, year });
           await newUser.save();
         }
@@ -52,6 +53,7 @@ router.post(
         }
       }
     } catch (error) {
+      console.log(error.message);
       return res.status(500).json({ message: "Internal Server Error", error });
     }
   }

@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post.js');
 
+const middlewareRoutine  = require('../services/middleware.js');
+
+router.use(middlewareRoutine)
+
 router.post('/new', async (req, res) => {
    console.log("received")
    var roll = req.roll || "2021115125";
