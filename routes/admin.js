@@ -2,12 +2,20 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const Post = require('../models/post.js');
+const middlewareRoutine = require('../services/middleware');
 
-router.post('/login', async (req, res) => {
-    
+
+router.use(middlewareRoutine); 
+
+router.use((req, res, next) => { 
+      if (req.role !== "admin") {
+         return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
+      }
+      console.log("Admin middleware crossed")   
+      next();
 });
 
- // all the below routes should only for admins
+// all the below routes should only for admins
 
 router.get('/all_pending', async (req, res) => {
     var {head, content} = req.query;

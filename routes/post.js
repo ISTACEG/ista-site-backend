@@ -8,15 +8,16 @@ router.use(middlewareRoutine)
 
 router.post('/new', async (req, res) => {
    console.log("received")
-   var roll = req.roll || "2021115125";
-   var {head, content} = req.query;
+   var roll = req.roll;
+   var {head, content, idRevealPreferance} = req.body;
+   console.log(roll, head, content, idRevealPreferance);
    try {
       var grievance = new Post({
-       head, content, postedBy: roll, status:"pending"
+       head, content, postedBy: roll, status:"pending", hideId: idRevealPreferance === "hide"
       })
       await grievance.save();
       console.log(head, content);
-      res.status(200).json({success: true}) 
+      res.status(200).json({success: true}); 
    } catch(err) {
       console.log("Error at adding post : " + err.message);
       res.json({success: false})

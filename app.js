@@ -8,8 +8,7 @@ const posts = require("./routes/post");
 const admin = require("./routes/admin");
 const login = require("./routes/login");
 const profile = require("./routes/profile");
-
-const morgan = require("morgan");
+const verify = require("./routes/verify");
 const fs = require("fs");
 const path = require("path");
 
@@ -28,6 +27,7 @@ app.use(cors());
 
 app.use("/auth/register", addUser);
 app.use("/auth/login", login);
+app.use("/auth/check",verify);
 app.use("/post", posts);
 app.use("/admin", admin);
 app.use("/profile", profile);

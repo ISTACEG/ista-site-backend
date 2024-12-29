@@ -7,7 +7,8 @@ const postSchema = new mongoose.Schema({
     upvote: { type: Array },
     downvote: { type : Array },
     rejectionMessage: { type: String },
-    postedBy: {type: String, required : true}
+    postedBy: {type: String, required : true},
+    hideIdentity: { type: Boolean }
 });
 
 const post = mongoose.model('post', postSchema);

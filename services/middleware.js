@@ -10,7 +10,7 @@ const middlewareRoutine = (req, res, next) => {
     jwt.verify(token, "dev", (err, decoded) => {
         console.log(err, decoded)
         if (err) {
-            return res.status(401).json({ message: "Session Expired or Violated", expired: true });
+            return res.status(401).json({ message: "Session Expired or Violated", expired: true, authorized: false });
         }
         req.roll = decoded.user.roll;
         req.role = decoded.user.role;
