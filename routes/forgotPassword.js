@@ -64,7 +64,7 @@ router.post(
       }
 
       if (parseInt(otp) === cachedOtp) {
-        otpCache.set(`${roll}_verified`, true, 600); // Set verification flag with TTL of 10 minutes
+        otpCache.set(`${roll}_verified`, true, 600); // verified flag ttl value
         otpCache.del(roll);
         return res.status(200).json({ message: "OTP verified" });
       } else {
