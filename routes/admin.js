@@ -34,10 +34,10 @@ router.post('/approve/:post_id', async (req, res) => {
     var post_id = req.params.post_id;
     try {
        var obj = await Post.updateOne({_id : post_id}, {status:"approved"})
-       res.status(200).json({success: true});
+       res.status(200).json({success: true, message: "Approved"});
     } catch (err) {
        console.log("Error in approving post : " + err.message);
-       res.json({success: false});
+       res.json({success: false, message: err.message});
     }
  })
 
@@ -50,10 +50,10 @@ router.post('/approve/:post_id', async (req, res) => {
     var message = req.query.message;
     try {
        var obj = await Post.updateOne({_id : post_id}, {status:"rejected", rejectionMessage: message})
-       res.status(200).json({success: true});
+       res.status(200).json({success: true, message: "Rejected"});
     } catch (err) {
        console.log("Error in approving post : " + err.message);
-       res.json({success: false});
+       res.json({success: false, message: err.message});
     }
  })
  

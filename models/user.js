@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     personal_mail: { type: String, default: null },
     password: { type: String, default: null },
     verified: { type: Boolean, default: false },
+    isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

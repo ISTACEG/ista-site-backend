@@ -13,7 +13,7 @@ router.post('/new', async (req, res) => {
    console.log(roll, head, content, idRevealPreferance);
    try {
       var grievance = new Post({
-       head, content, postedBy: roll, status:"pending", hideId: idRevealPreferance === "hide"
+       head, content, postedBy: roll, status:"pending", hideIdentity: idRevealPreferance === "hide"
       })
       await grievance.save();
       console.log(head, content);
@@ -28,7 +28,16 @@ router.get('/all_approved', async (req, res) => {
    var {head, content} = req.query;
    try {
       var docs = await Post.find({status: "approved"}).exec();
-      res.status(200).json({success: true, posts: docs}) 
+      const formattedDocs = docs.map(post => ({
+         head: post.head,
+         content: post.content,
+         upvoteCount: post.upvote.length,
+         downvoteCount: post.downvote.length,
+         upvoted: post.upvote.includes(req.roll),
+         downvoted: post.downvote.includes(req.roll),
+         ...(post.hideIdentity === false && { postedBy: post.postedBy }),
+       }));
+      res.status(200).json({success: true, posts: formattedDocs}) 
    } catch(err) {
       console.log("Error at fetching posts : " + err.message);
       res.json({success: false, reason : err.message})

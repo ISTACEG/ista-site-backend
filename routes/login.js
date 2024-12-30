@@ -40,7 +40,7 @@ router.post(
           .json({ success: false, message: "Invalid credentials" });
       }
 
-      console.log(user);
+      console.log(user.isAdmin);
 
       const payload = {
         user: {
