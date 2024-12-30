@@ -7,7 +7,9 @@ const addUser = require("./routes/addUser");
 const posts = require("./routes/post");
 const admin = require("./routes/admin");
 const login = require("./routes/login");
+const morgan = require("morgan");
 const profile = require("./routes/profile");
+const forgotPassword = require("./routes/forgotPassword");
 const verify = require("./routes/verify");
 const fs = require("fs");
 const path = require("path");
@@ -25,6 +27,7 @@ app.use(cors());
 
 app.use("/auth/register", addUser);
 app.use("/auth/login", login);
+app.use("/auth/forgot", forgotPassword);
 app.use("/auth/check",verify);
 app.use("/post", posts);
 app.use("/admin", admin);

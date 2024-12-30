@@ -104,6 +104,8 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
+
+
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -122,10 +124,17 @@ router.post(
 
       if (personal_mail) {
         user.personal_mail = personal_mail;
+        await user.save();
       }
-      user.password = await bcrypt.hash(password, 10);
+      if(!user.password){
+       user.password = await bcrypt.hash(password, 10);
+      }
+      else{
+        return res.status(400).json({ message: "User already exists, If you want to change use the forgot password route" });
+      }
+      
       await user.save();
-
+      
       return res
         .status(200)
         .json({ message: "Details added successfully", success: true });
