@@ -8,31 +8,8 @@ const {
   otpCache,
 } = require("../services/mailService");
 const bcrypt = require("bcryptjs");
-const axios = require('axios');
-const cheerio = require('cheerio');
-
-const url = 'https://www.auegov.ac.in/Department/ist/ugstudents';
-
-async function getStudentDetails(roll) {
-    try {
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-
-        let studentName = null;
-
-        $('.student-info').each((index, element) => {
-            const studentRoll = $(element).find('h6').text().trim(); // Extract roll number
-            if (studentRoll === roll) {
-                studentName = $(element).find('h5').text().trim(); // Extract name
-            }
-        });
-
-        return studentName || "-1";
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return "-1";
-    }
-}
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 router.post(
   "/generateOtp",
@@ -48,17 +25,8 @@ router.post(
       const student_email = `${roll.trim()}@student.annauniv.edu`;
       const user = await User.findOne({ roll });
       const year = parseInt(roll.substring(0, 4)) + 4;
-      const name = await getStudentDetails(roll);
 
-      if (name == "-1") {
-        const resp = {
-          verified: false,
-          message: "User Roll not Found in IT Department database",
-        };
-        return res.status(200).json(resp);
-      }
-
-      console.log(roll, name);
+      console.log(roll);
 
       if (user && user.verified && user.password) {
         const resp = {
@@ -69,8 +37,8 @@ router.post(
         return res.status(200).json(resp);
       } else {
         if (!user) {
-          console.log(roll, student_email, year)
-          const newUser = new User({ roll, student_mail: student_email, year, name });
+          console.log(roll, student_email, year);
+          const newUser = new User({ roll, student_mail: student_email, year });
           await newUser.save();
         }
         const otp = generateOtp(roll);
@@ -141,7 +109,6 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
 
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -162,15 +129,19 @@ router.post(
         user.personal_mail = personal_mail;
         await user.save();
       }
-      if(!user.password){
-       user.password = await bcrypt.hash(password, 10);
+      if (!user.password) {
+        user.password = await bcrypt.hash(password, 10);
+      } else {
+        return res
+          .status(400)
+          .json({
+            message:
+              "User already exists, If you want to change use the forgot password route",
+          });
       }
-      else{
-        return res.status(400).json({ message: "User already exists, If you want to change use the forgot password route" });
-      }
-      
+
       await user.save();
-      
+
       return res
         .status(200)
         .json({ message: "Details added successfully", success: true });

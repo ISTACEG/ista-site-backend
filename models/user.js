@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     roll: { type: String, unique: true, required: true },
-    name: { type: String, required: true },
     student_mail: { type: String, unique: true, required: true },
     year: { type: Number, required: true },
     personal_mail: { type: String, default: null },
