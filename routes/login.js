@@ -40,12 +40,16 @@ router.post(
           .json({ success: false, message: "Invalid credentials" });
       }
 
+      console.log(user);
+
       const payload = {
         user: {
           roll: roll,
-          role: user.isAdmin == true ? "admin" : "user",
-        },
+          role: user.isAdmin ? "admin" : "user",
+        }
       };
+
+      console.log(payload);
 
       let token  = jwt.sign(payload, "dev", {
         expiresIn: "2h",

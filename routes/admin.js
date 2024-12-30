@@ -7,17 +7,15 @@ const middlewareRoutine = require('../services/middleware');
 
 router.use(middlewareRoutine); 
 
-router.use((req, res, next) => { 
-      if (req.role !== "admin") {
-         return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
-      }
-      console.log("Admin middleware crossed")   
-      next();
-});
-
 // all the below routes should only for admins
 
 router.get('/all_pending', async (req, res) => {
+   console.log(req.role);
+   if (req.role !== "admin") {
+      console.log("Not a Admin")   
+      return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
+   }
+
     var {head, content} = req.query;
     try {
        var docs = await Post.find({status: "pending"}).exec();
@@ -29,6 +27,10 @@ router.get('/all_pending', async (req, res) => {
 });
 
 router.post('/approve/:post_id', async (req, res) => {
+   if (req.role !== "admin") {
+      console.log("Not a Admin")   
+      return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
+   }
     var post_id = req.params.post_id;
     try {
        var obj = await Post.updateOne({_id : post_id}, {status:"approved"})
@@ -40,6 +42,10 @@ router.post('/approve/:post_id', async (req, res) => {
  })
 
  router.post('/reject/:post_id', async (req, res) => {
+   if (req.role !== "admin") {
+      console.log("Not a Admin")   
+      return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
+   }
     var post_id = req.params.post_id;
     var message = req.query.message;
     try {
