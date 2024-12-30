@@ -29,6 +29,7 @@ router.get('/all_approved', async (req, res) => {
    try {
       var docs = await Post.find({status: "approved"}).exec();
       const formattedDocs = docs.map(post => ({
+         _id: post._id,
          head: post.head,
          content: post.content,
          upvoteCount: post.upvote.length,
@@ -46,8 +47,9 @@ router.get('/all_approved', async (req, res) => {
 
 
 router.post("/toggle_upvote/:post_id", async (req, res) => {
-   var roll = req.roll || "2021115125";
+   var roll = req.roll;
    var post_id = req.params.post_id;
+   console.log(roll, post_id);
    try {
       var thatPost = await Post.findById(post_id).exec();
       console.log(thatPost);
@@ -70,7 +72,7 @@ router.post("/toggle_upvote/:post_id", async (req, res) => {
       }) 
 
    } catch(err) {
-      console.log("Error at adding post : " + err.message);
+      console.log("Error at up voting post : " + err.message);
       res.json({success: false})
    }
 })
@@ -101,7 +103,7 @@ router.post("/toggle_downvote/:post_id", async (req, res) => {
       }) 
       
    } catch(err) {
-      console.log("Error at adding post : " + err.message);
+      console.log("Error at downvoting post : " + err.message);
       res.json({success: false})
    }
 })

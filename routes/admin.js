@@ -47,7 +47,7 @@ router.post('/approve/:post_id', async (req, res) => {
       return res.status(401).json({message: "Unauthorized", authorized: false, notAdmin: true});
    }
     var post_id = req.params.post_id;
-    var message = req.query.message;
+    var message = req.body.message;
     try {
        var obj = await Post.updateOne({_id : post_id}, {status:"rejected", rejectionMessage: message})
        res.status(200).json({success: true, message: "Rejected"});
