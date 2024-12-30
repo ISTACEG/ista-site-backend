@@ -8,6 +8,31 @@ const {
   otpCache,
 } = require("../services/mailService");
 const bcrypt = require("bcryptjs");
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+const url = 'https://www.auegov.ac.in/Department/ist/ugstudents';
+
+async function getStudentDetails(roll) {
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+
+        let studentName = null;
+
+        $('.student-info').each((index, element) => {
+            const studentRoll = $(element).find('h6').text().trim(); // Extract roll number
+            if (studentRoll === roll) {
+                studentName = $(element).find('h5').text().trim(); // Extract name
+            }
+        });
+
+        return studentName || "-1";
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return "-1";
+    }
+}
 
 router.post(
   "/generateOtp",
@@ -23,7 +48,18 @@ router.post(
       const student_email = `${roll.trim()}@student.annauniv.edu`;
       const user = await User.findOne({ roll });
       const year = parseInt(roll.substring(0, 4)) + 4;
-      console.log(roll);
+      const name = await getStudentDetails(roll);
+
+      if (name == "-1") {
+        const resp = {
+          verified: false,
+          message: "User Roll not Found in IT Department database",
+        };
+        return res.status(200).json(resp);
+      }
+
+      console.log(roll, name);
+
       if (user && user.verified && user.password) {
         const resp = {
           student_email: user.student_mail,
@@ -34,7 +70,7 @@ router.post(
       } else {
         if (!user) {
           console.log(roll, student_email, year)
-          const newUser = new User({ roll, student_mail: student_email, year });
+          const newUser = new User({ roll, student_mail: student_email, year, name });
           await newUser.save();
         }
         const otp = generateOtp(roll);
