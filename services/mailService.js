@@ -67,7 +67,7 @@ const sendForgotOtpMail = (student_email, otp) => {
         <p style="font-size: 16px; color: #ffffff;">If you did not request a password reset, please ignore this email.</p>
 
         <hr style="border: 0; border-top: 1px solid #ffd700; margin: 20px 0;">
-        <p style="font-size: 12px; color: #ffd700; text-align: center;">Thank you, ISTA Team</p>
+        <p style="font-size: 12px; color: #ffd700; text-align: center;">Thank you, ISTA Web Team</p>
       </div>
     `,
   };
