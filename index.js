@@ -14,7 +14,7 @@ const verify = require("./routes/verify");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4000;
 
 //logging
 const accessLogStream = fs.createWriteStream(
