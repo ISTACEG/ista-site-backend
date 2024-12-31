@@ -46,13 +46,13 @@ router.post(
         user: {
           roll: roll,
           role: user.isAdmin ? "admin" : "user",
-        }
+        },
       };
 
       console.log(payload);
 
-      let token  = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "2h",
+      let token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "5d",
       });
 
       return res
