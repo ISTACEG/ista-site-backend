@@ -14,7 +14,7 @@ const verify = require("./routes/verify");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 //logging
 const accessLogStream = fs.createWriteStream(
@@ -28,7 +28,7 @@ app.use(cors());
 app.use("/auth/register", addUser);
 app.use("/auth/login", login);
 app.use("/auth/forgot", forgotPassword);
-app.use("/auth/check",verify);
+app.use("/auth/check", verify);
 app.use("/post", posts);
 app.use("/admin", admin);
 app.use("/profile", profile);

@@ -51,7 +51,7 @@ router.post(
 
       console.log(payload);
 
-      let token  = jwt.sign(payload, "dev", {
+      let token  = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "2h",
       });
 
