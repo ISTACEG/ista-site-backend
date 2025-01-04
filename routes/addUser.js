@@ -21,10 +21,19 @@ router.post(
     }
 
     try {
-      const { roll } = req.body;
-      const student_email = `${roll.trim()}@student.annauniv.edu`;
+      const { roll, mail } = req.body;
+      const student_email = mail;
       const user = await User.findOne({ roll });
-      const year = parseInt(roll.substring(0, 4)) + 4;
+      var year = -1;
+      try {
+        year = parseInt(roll.substring(0, 4)) + 4;
+      } catch (err) {
+        year = -1;
+      }
+
+      if (isNaN(year)) {
+        year = -1;
+      }
 
       console.log(roll);
 
@@ -132,12 +141,10 @@ router.post(
       if (!user.password) {
         user.password = await bcrypt.hash(password, 10);
       } else {
-        return res
-          .status(400)
-          .json({
-            message:
-              "User already exists, If you want to change use the forgot password route",
-          });
+        return res.status(400).json({
+          message:
+            "User already exists, If you want to change use the forgot password route",
+        });
       }
 
       await user.save();
