@@ -1,17 +1,42 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const bodyParser = require('body-parser');
-const dbConnection = require('./config/dbConfig');
-const addUser = require('./routes/addUser');
-const posts = require('./routes/post');
+const bodyParser = require("body-parser");
+const dbConnection = require("./config/dbConfig");
+const cors = require("cors");
+const addUser = require("./routes/addUser");
+const posts = require("./routes/post");
+const admin = require("./routes/admin");
+const login = require("./routes/login");
+const morgan = require("morgan");
+const profile = require("./routes/profile");
+const forgotPassword = require("./routes/forgotPassword");
+const verify = require("./routes/verify");
+const fs = require("fs");
+const path = require("path");
 
 const PORT = process.env.PORT || 4000;
 
-app.use(bodyParser.json());
+//logging
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
 
-app.use('/auth', addUser);
-app.use('/post', posts);
+app.use(bodyParser.json());
+app.use(cors());
+
+app.use("/auth/register", addUser);
+app.use("/auth/login", login);
+app.use("/auth/forgot", forgotPassword);
+app.use("/auth/check",verify);
+app.use("/post", posts);
+app.use("/admin", admin);
+app.use("/profile", profile);
+
+app.use("/*", (req, res) => {
+  res.status(404).json({ message: "Endpoint not found" });
+});
 
 app.listen(PORT, () => {
-    console.log(`listening on http://localhost:${PORT}`);
+  console.log(`listening on http://localhost:${PORT}`);
 });
