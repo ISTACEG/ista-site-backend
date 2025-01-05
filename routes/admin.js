@@ -82,4 +82,21 @@ router.post("/mark_as_resolved/:post_id", async (req, res) => {
   }
 });
 
+router.post("/remove/:post_id", async (req, res) => {
+  if (req.role !== "admin") {
+    console.log("Not a Admin");
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", authorized: false, notAdmin: true });
+  }
+  var post_id = req.params.post_id;
+  try {
+    var obj = await Post.updateOne({ _id: post_id }, { status: "removed" });
+    res.status(200).json({ success: true, message: "Remove from feed" });
+  } catch (err) {
+    console.log("Error in resolving post : " + err.message);
+    res.json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
