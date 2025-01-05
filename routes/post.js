@@ -43,7 +43,9 @@ router.get("/all_approved", async (req, res) => {
       ...(post.hideIdentity === false && { postedBy: post.postedBy }),
     }));
     formattedDocs.reverse();
-    res.status(200).json({ success: true, posts: formattedDocs });
+    res
+      .status(200)
+      .json({ success: true, posts: formattedDocs, role: req.role });
   } catch (err) {
     console.log("Error at fetching posts : " + err.message);
     res.json({ success: false, reason: err.message });
