@@ -11,6 +11,7 @@ router.get("/", async (req, res) => {
     try {
         var user = await User.findOne({ roll }).exec();
         var grievances = await Post.find({ postedBy: roll }).exec();    
+        grievances.reverse();
         res.status(200).json({ success: true, user, grievances });
     } catch (err) {
         console.log("Error at getting user : " + err.message);

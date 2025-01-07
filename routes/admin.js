@@ -36,7 +36,7 @@ router.post("/approve/:post_id", async (req, res) => {
   }
   var post_id = req.params.post_id;
   try {
-    var obj = await Post.updateOne({ _id: post_id }, { status: "approved" });
+    var obj = await Post.updateOne({ _id: post_id }, { status: "approved", takenAt: new Date() });
     res.status(200).json({ success: true, message: "Approved" });
   } catch (err) {
     console.log("Error in approving post : " + err.message);
@@ -56,7 +56,7 @@ router.post("/reject/:post_id", async (req, res) => {
   try {
     var obj = await Post.updateOne(
       { _id: post_id },
-      { status: "rejected", rejectionMessage: message }
+      { status: "rejected", rejectionMessage: message, takenAt: new Date() }
     );
     res.status(200).json({ success: true, message: "Rejected" });
   } catch (err) {
@@ -74,7 +74,7 @@ router.post("/mark_as_resolved/:post_id", async (req, res) => {
   }
   var post_id = req.params.post_id;
   try {
-    var obj = await Post.updateOne({ _id: post_id }, { status: "resolved" });
+    var obj = await Post.updateOne({ _id: post_id }, { status: "resolved", resolvedAt: new Date() });
     res.status(200).json({ success: true, message: "Marked as Resolved" });
   } catch (err) {
     console.log("Error in resolving post : " + err.message);

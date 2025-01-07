@@ -8,7 +8,10 @@ const postSchema = new mongoose.Schema({
     downvote: { type : Array },
     rejectionMessage: { type: String },
     postedBy: {type: String, required : true},
-    hideIdentity: { type: Boolean }
+    hideIdentity: { type: Boolean },
+    postedAt: { type: Date, default: Date.now }, 
+    takenAt: { type: Date }, 
+    resolvedAt: { type: Date }, 
 });
 
 const post = mongoose.model('post', postSchema);
